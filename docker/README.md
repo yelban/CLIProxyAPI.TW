@@ -69,9 +69,13 @@ your-project/
 # Docker build 參數
 CLIPROXYAPI_VERSION=v6.0.0
 TZ=Asia/Taipei
+
+# 管理 API 密鑰（可選，也可在 config.docker.yaml 設定）
+# MANAGEMENT_PASSWORD=your-management-secret
 ```
 
-> **注意**：API keys 等設定請在 `config.docker.yaml` 中設定，不支援環境變數。
+> **注意**：`api-keys` 等設定只能在 `config.docker.yaml` 中設定。
+> `MANAGEMENT_PASSWORD` 是唯一支援環境變數的應用設定。
 
 ## Nginx Proxy Manager 反向代理
 

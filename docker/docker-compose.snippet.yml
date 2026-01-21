@@ -13,6 +13,8 @@
     env_file: [.env]
     environment:
       - TZ=${TZ:-Asia/Taipei}
+      # 管理 API 密鑰（可選，也可在 config.docker.yaml 設定）
+      # - MANAGEMENT_PASSWORD=${MANAGEMENT_PASSWORD:-}
     volumes:
       # 設定檔（唯讀）
       - ./cliproxyapi/config.docker.yaml:/CLIProxyAPI/config.yaml:ro
