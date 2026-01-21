@@ -126,6 +126,32 @@ goreleaser build --snapshot --clean
 goreleaser release
 ```
 
+## Upstream Sync
+
+此專案為 [router-for-me/CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI) 的 fork。同步上游更新時保留本地修改：
+
+```bash
+# 首次設定 upstream remote（僅需執行一次）
+git remote add upstream https://github.com/router-for-me/CLIProxyAPI.git
+
+# 拉取上游更新
+git fetch upstream
+
+# 查看上游新增的 commits
+git log --oneline HEAD..upstream/main
+
+# 合併上游變更（保留本地修改）
+git merge upstream/main -m "Merge upstream/main: sync with router-for-me/CLIProxyAPI"
+
+# 推送到 origin
+git push origin main
+```
+
+**本地獨特修改：**
+- 管理介面來源改為 TW fork (`yelban/Cli-Proxy-API-Management-Center.TW`)
+- Docker 部署範例 (`docker/`)
+- CLAUDE.md 專案指引
+
 ## Commit Convention
 
 ```
