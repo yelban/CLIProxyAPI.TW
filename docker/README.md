@@ -66,10 +66,12 @@ your-project/
 ## 環境變數（.env）
 
 ```bash
-# CLIProxyAPI
+# Docker build 參數
 CLIPROXYAPI_VERSION=v6.0.0
 TZ=Asia/Taipei
 ```
+
+> **注意**：API keys 等設定請在 `config.docker.yaml` 中設定，不支援環境變數。
 
 ## Nginx Proxy Manager 反向代理
 
