@@ -1,0 +1,88 @@
+# CLIProxyAPI Docker 部署設定檔
+# 複製此檔案到 docker-compose.yml 同級目錄的 ./cliproxyapi/config.yaml
+
+# 伺服器設定
+host: "0.0.0.0"
+port: 8317
+
+# 認證目錄（容器內路徑）
+auth-dir: "/CLIProxyAPI/auth"
+
+# API 金鑰（客戶端認證用）
+api-keys:
+  - "your-api-key-1"
+  - "your-api-key-2"
+
+# 除錯模式
+debug: false
+
+# 管理 API 設定
+remote-management:
+  allow-remote: false
+  secret-key: ""  # 留空則停用管理 API，設定後需透過 Header 傳遞金鑰
+
+# 路由策略：round-robin（輪詢）或 fill-first（填滿優先）
+routing:
+  strategy: "round-robin"
+
+# 請求重試設定
+request-retry: 3
+max-retry-interval: 30
+
+# 配額超限時的行為
+quota-exceeded:
+  switch-project: true
+  switch-preview-model: true
+
+# =======================================================================
+# OAuth 登入帳號（需先在本機執行登入指令，再將 token 複製到容器）
+# 登入後的 token 檔案位於 ~/.cli-proxy-api/，需掛載到 /CLIProxyAPI/auth/
+# =======================================================================
+
+# =======================================================================
+# API Key 模式（無需 OAuth，直接使用 API Key）
+# =======================================================================
+
+# Gemini API Keys
+# gemini-api-key:
+#   - api-key: "AIzaSy..."
+#     # prefix: "gemini"  # 選用：呼叫時需加前綴如 gemini/gemini-2.5-flash
+
+# Claude API Keys
+# claude-api-key:
+#   - api-key: "sk-ant-..."
+#     # prefix: "claude"
+
+# OpenAI/Codex API Keys
+# codex-api-key:
+#   - api-key: "sk-..."
+#     # prefix: "openai"
+
+# =======================================================================
+# OpenAI 相容提供者（如 OpenRouter）
+# =======================================================================
+# openai-compatibility:
+#   - name: "openrouter"
+#     base-url: "https://openrouter.ai/api/v1"
+#     api-key-entries:
+#       - api-key: "sk-or-v1-..."
+
+# =======================================================================
+# OAuth 模型別名（重新命名 OAuth 頻道的模型）
+# =======================================================================
+oauth-model-alias:
+  antigravity:
+    - name: "rev19-uic3-1p"
+      alias: "gemini-2.5-computer-use-preview-10-2025"
+    - name: "gemini-3-pro-image"
+      alias: "gemini-3-pro-image-preview"
+    - name: "gemini-3-pro-high"
+      alias: "gemini-3-pro-preview"
+    - name: "gemini-3-flash"
+      alias: "gemini-3-flash-preview"
+    - name: "claude-sonnet-4-5"
+      alias: "gemini-claude-sonnet-4-5"
+    - name: "claude-sonnet-4-5-thinking"
+      alias: "gemini-claude-sonnet-4-5-thinking"
+    - name: "claude-opus-4-5-thinking"
+      alias: "gemini-claude-opus-4-5-thinking"

@@ -1,0 +1,32 @@
+# CLIProxyAPI Docker Compose 服務設定
+# 將此段落加入你的 docker-compose.yml services 區塊
+
+  cliproxyapi:
+    image: cliproxyapi:latest
+    build:
+      context: ./cliproxyapi
+      dockerfile: Dockerfile
+      args:
+        - VERSION=${CLIPROXYAPI_VERSION:-dev}
+        - COMMIT=${GIT_COMMIT:-unknown}
+    container_name: cliproxyapi
+    env_file: [.env]
+    environment:
+      - TZ=${TZ:-Asia/Taipei}
+    volumes:
+      # 設定檔（唯讀）
+      - ./cliproxyapi/config.yaml:/CLIProxyAPI/config.yaml:ro
+      # OAuth token 儲存目錄
+      - ./cliproxyapi/auth:/CLIProxyAPI/auth
+    ports:
+      - "127.0.0.1:8317:8317"  # 僅本機存取，透過 NPM 反向代理
+    deploy:
+      resources:
+        limits: { memory: 256M }
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8317/v1/models"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks: [scoobydoo]
