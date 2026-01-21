@@ -4,7 +4,7 @@
   cliproxyapi:
     image: cliproxyapi:latest
     build:
-      context: ./cliproxyapi
+      context: ./CLIProxyAPI.TW
       dockerfile: Dockerfile
       args:
         - VERSION=${CLIPROXYAPI_VERSION:-dev}
@@ -15,9 +15,9 @@
       - TZ=${TZ:-Asia/Taipei}
     volumes:
       # 設定檔（唯讀）
-      - ./cliproxyapi/config.yaml:/CLIProxyAPI/config.yaml:ro
+      - ./cliproxyapi/config.docker.yaml:/CLIProxyAPI/config.yaml:ro
       # OAuth token 儲存目錄
-      - ./cliproxyapi/auth:/CLIProxyAPI/auth
+      - ./cliproxyapi/auths:/CLIProxyAPI/auths
     ports:
       - "127.0.0.1:8317:8317"  # 僅本機存取，透過 NPM 反向代理
     deploy:

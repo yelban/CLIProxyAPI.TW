@@ -6,7 +6,7 @@ host: "0.0.0.0"
 port: 8317
 
 # 認證目錄（容器內路徑）
-auth-dir: "/CLIProxyAPI/auth"
+auth-dir: "/CLIProxyAPI/auths"
 
 # API 金鑰（客戶端認證用）
 api-keys:
