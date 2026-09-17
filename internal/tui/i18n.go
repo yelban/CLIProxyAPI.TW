@@ -1,7 +1,7 @@
 package tui
 
 // i18n provides a simple internationalization system for the TUI.
-// Supported locales: "zh" (Chinese, default), "en" (English).
+// Supported locales: "en" (English, default), "zh" (Simplified Chinese), "zh-TW" (Traditional Chinese).
 
 var currentLocale = "en"
 
@@ -17,13 +17,18 @@ func CurrentLocale() string {
 	return currentLocale
 }
 
-// ToggleLocale switches between zh and en.
+// localeOrder is the cycle order used by ToggleLocale.
+var localeOrder = []string{"en", "zh", "zh-TW"}
+
+// ToggleLocale cycles to the next locale in localeOrder.
 func ToggleLocale() {
-	if currentLocale == "zh" {
-		currentLocale = "en"
-	} else {
-		currentLocale = "zh"
+	for i, l := range localeOrder {
+		if l == currentLocale {
+			currentLocale = localeOrder[(i+1)%len(localeOrder)]
+			return
+		}
 	}
+	currentLocale = localeOrder[0]
 }
 
 // T returns the translated string for the given key.
@@ -43,20 +48,25 @@ func T(key string) string {
 }
 
 var locales = map[string]map[string]string{
-	"zh": zhStrings,
-	"en": enStrings,
+	"zh":    zhStrings,
+	"zh-TW": zhTWStrings,
+	"en":    enStrings,
 }
 
 // ──────────────────────────────────────────
 // Tab names
 // ──────────────────────────────────────────
 var zhTabNames = []string{"仪表盘", "配置", "认证文件", "API 密钥", "OAuth", "日志"}
+var zhTWTabNames = []string{"儀表板", "設定", "認證檔案", "API 金鑰", "OAuth", "日誌"}
 var enTabNames = []string{"Dashboard", "Config", "Auth Files", "API Keys", "OAuth", "Logs"}
 
 // TabNames returns tab names in the current locale.
 func TabNames() []string {
-	if currentLocale == "zh" {
+	switch currentLocale {
+	case "zh":
 		return zhTabNames
+	case "zh-TW":
+		return zhTWTabNames
 	}
 	return enTabNames
 }
@@ -373,4 +383,161 @@ var enStrings = map[string]string{
 	"logs_lines":       "Lines",
 	"logs_help":        " [a] Auto-scroll • [c] Clear • [1] All [2] info+ [3] warn+ [4] error • [↑↓] Scroll",
 	"logs_waiting":     "  Waiting for log output...",
+}
+
+var zhTWStrings = map[string]string{
+	// ── Common ──
+	"loading":      "載入中...",
+	"refresh":      "重新整理",
+	"save":         "儲存",
+	"cancel":       "取消",
+	"confirm":      "確認",
+	"yes":          "是",
+	"no":           "否",
+	"error":        "錯誤",
+	"success":      "成功",
+	"navigate":     "瀏覽",
+	"scroll":       "捲動",
+	"enter_save":   "Enter：儲存",
+	"esc_cancel":   "Esc：取消",
+	"enter_submit": "Enter：送出",
+	"press_r":      "[r] 重新整理",
+	"press_scroll": "[↑↓] 捲動",
+	"not_set":      "（未設定）",
+	"error_prefix": "⚠ 錯誤：",
+
+	// ── Status bar ──
+	"status_left":                 " CLIProxyAPI 管理終端",
+	"status_right":                "Tab/Shift+Tab：切換 • L：語言 • q/Ctrl+C：離開 ",
+	"initializing_tui":            "正在初始化...",
+	"auth_gate_title":             "🔐 連線管理 API",
+	"auth_gate_help":              " 請輸入管理密碼，按 Enter 連線",
+	"auth_gate_password":          "密碼",
+	"auth_gate_enter":             " Enter：連線 • q/Ctrl+C：離開 • L：語言",
+	"auth_gate_connecting":        "正在連線...",
+	"auth_gate_connect_fail":      "連線失敗：%s",
+	"auth_gate_password_required": "請輸入密碼",
+
+	// ── Dashboard ──
+	"dashboard_title":  "📊 儀表板",
+	"dashboard_help":   " [r] 重新整理 • [↑↓] 捲動",
+	"connected":        "● 已連線",
+	"mgmt_keys":        "管理金鑰",
+	"auth_files_label": "認證檔案",
+	"active_suffix":    "使用中",
+	"total_requests":   "請求",
+	"success_label":    "成功",
+	"failure_label":    "失敗",
+	"total_tokens":     "總 Tokens",
+	"current_config":   "目前設定",
+	"debug_mode":       "除錯模式",
+	"usage_stats":      "用量統計",
+	"log_to_file":      "日誌寫入檔案",
+	"retry_count":      "重試次數",
+	"proxy_url":        "代理 URL",
+	"routing_strategy": "路由策略",
+	"model_stats":      "模型統計",
+	"model":            "模型",
+	"requests":         "請求數",
+	"tokens":           "Tokens",
+	"bool_yes":         "是 ✓",
+	"bool_no":          "否",
+
+	// ── Config ──
+	"config_title":      "⚙ 設定",
+	"config_help1":      "  [↑↓/jk] 瀏覽 • [Enter/Space] 編輯 • [r] 重新整理",
+	"config_help2":      "  布林值：Enter 切換 • 文字／數字：Enter 開始輸入，Enter 確認，Esc 取消",
+	"updated_ok":        "✓ 更新成功",
+	"no_config":         "  尚未載入設定",
+	"invalid_int":       "無效的整數",
+	"section_server":    "伺服器",
+	"section_logging":   "日誌與統計",
+	"section_quota":     "超出配額處理",
+	"section_routing":   "路由",
+	"section_websocket": "WebSocket",
+	"section_other":     "其他",
+
+	// ── Auth Files ──
+	"auth_title":      "🔑 認證檔案",
+	"auth_help1":      " [↑↓/jk] 瀏覽 • [Enter] 展開 • [e] 啟用／停用 • [d] 刪除 • [r] 重新整理 • [R] 更新憑證",
+	"auth_help2":      " [1] 編輯 prefix • [2] 編輯 proxy_url • [3] 編輯 priority",
+	"no_auth_files":   "  沒有認證檔案",
+	"confirm_delete":  "⚠ 刪除 %s？[y/n]",
+	"deleted":         "已刪除 %s",
+	"enabled":         "已啟用",
+	"disabled":        "已停用",
+	"refreshed_auth":  "已更新憑證 %s",
+	"refreshed_all":   "已更新所有憑證",
+	"updated_field":   "已更新 %s（%s）",
+	"status_active":   "使用中",
+	"status_disabled": "已停用",
+
+	// ── API Keys ──
+	"keys_title":         "🔐 API 金鑰",
+	"keys_help":          " [↑↓/jk] 瀏覽 • [a] 新增 • [e] 編輯 • [d] 刪除 • [c] 複製 • [r] 重新整理",
+	"no_keys":            "  沒有 API 金鑰，按 [a] 新增",
+	"access_keys":        "Access API Keys",
+	"confirm_delete_key": "⚠ 確定刪除 %s？[y/n]",
+	"key_added":          "已新增 API 金鑰",
+	"key_updated":        "已更新 API 金鑰",
+	"key_deleted":        "已刪除 API 金鑰",
+	"copied":             "✓ 已複製到剪貼簿",
+	"copy_failed":        "✗ 複製失敗",
+	"new_key_prompt":     "  新金鑰：",
+	"edit_key_prompt":    "  編輯金鑰：",
+	"enter_add":          "    Enter：新增 • Esc：取消",
+	"enter_save_esc":     "    Enter：儲存 • Esc：取消",
+
+	// ── OAuth ──
+	"oauth_title":          "🔐 OAuth 登入",
+	"oauth_select":         "  選擇供應商，按 [Enter] 開始 OAuth 登入：",
+	"oauth_help":           "  [↑↓/jk] 瀏覽 • [Enter] 登入 • [Esc] 清除狀態",
+	"oauth_initiating":     "⏳ 正在啟動 %s 登入...",
+	"oauth_success":        "認證成功！請重新整理「認證檔案」分頁查看新憑證。",
+	"oauth_completed":      "認證流程已完成。",
+	"oauth_failed":         "認證失敗",
+	"oauth_timeout":        "OAuth 流程逾時",
+	"oauth_status_error":   "無法查詢 OAuth 狀態",
+	"oauth_press_esc":      "  按 [Esc] 取消",
+	"oauth_auth_url":       "  授權網址：",
+	"oauth_remote_hint":    "  遠端瀏覽器模式：在瀏覽器開啟上方網址完成授權後，把回呼 URL 貼到下方。",
+	"oauth_callback_url":   "  回呼 URL：",
+	"oauth_press_c":        "  按 [c] 輸入回呼 URL • [Esc] 返回",
+	"oauth_submitting":     "⏳ 正在送出回呼...",
+	"oauth_submit_ok":      "✓ 回呼已送出，等待處理...",
+	"oauth_submit_fail":    "✗ 回呼送出失敗",
+	"oauth_waiting":        "  等待認證中...",
+	"oauth_user_code":      "  使用者代碼：",
+	"oauth_device_hint":    "  裝置代碼登入：在瀏覽器開啟上方網址並核准存取，不需要貼上回呼 URL。",
+	"oauth_device_expires": "  裝置代碼將在 %d 秒後過期。",
+
+	// ── Usage ──
+	"usage_title":         "📈 用量統計",
+	"usage_help":          " [r] 重新整理 • [↑↓] 捲動",
+	"usage_no_data":       "  無法取得用量資料",
+	"usage_total_reqs":    "總請求數",
+	"usage_total_tokens":  "總 Token 數",
+	"usage_success":       "成功",
+	"usage_failure":       "失敗",
+	"usage_total_token_l": "總 Token",
+	"usage_rpm":           "RPM",
+	"usage_tpm":           "TPM",
+	"usage_req_by_hour":   "每小時請求數",
+	"usage_tok_by_hour":   "每小時 Token 用量",
+	"usage_req_by_day":    "每日請求數",
+	"usage_api_detail":    "API 詳細統計",
+	"usage_input":         "輸入",
+	"usage_output":        "輸出",
+	"usage_cached":        "快取",
+	"usage_reasoning":     "推理",
+	"usage_time":          "時間",
+
+	// ── Logs ──
+	"logs_title":       "📋 日誌",
+	"logs_auto_scroll": "● 自動捲動",
+	"logs_paused":      "○ 已暫停",
+	"logs_filter":      "篩選",
+	"logs_lines":       "行數",
+	"logs_help":        " [a] 自動捲動 • [c] 清除 • [1] 全部 [2] info+ [3] warn+ [4] error • [↑↓] 捲動",
+	"logs_waiting":     "  等待日誌輸出...",
 }
