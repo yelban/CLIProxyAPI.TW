@@ -38,3 +38,5 @@ ssh wks 'bash /home/orz99/zoo/CLIProxyAPI.TW/deploy/wks-update.sh'
 
 - 只開 8317。上游 compose 的 8085、1455 等是本機 OAuth 回呼埠，伺服器上不開；在管理介面登入帳號後，把回呼網址手動貼回。
 - 修改金鑰：改 `.env` 後執行 `docker compose up -d cli-proxy-api`。
+- `config.yaml` 是單檔 bind mount，綁的是檔案的 inode。`sed -i` 或編輯器另存會換掉 inode，容器看不到新內容，改完要 `docker compose up -d --force-recreate cli-proxy-api`。優先在管理介面改設定，服務會直接寫回原檔並熱重載。
+- `plugins.enabled` 已於 2026-09-17 開啟，外掛放在 `cli-proxy-api-data/plugins/`；外掛是在服務內執行的程式碼，只裝可信來源。
