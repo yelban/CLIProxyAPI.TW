@@ -2,6 +2,8 @@
 
 本 fork 部署在 wks（Hostinger VPS），服務名 `cli-proxy-api`，2026-09-17 上線。通用流程見本機 `~/.claude/guides/wks-deploy.md`。
 
+> **目前狀態（2026-09-18）：停用。** OpenAI OAuth 帳號改放在 sub2api（架構 A），CPA 沒有帳號，所以用 `docker compose stop cli-proxy-api` 停掉，設定與資料都保留。要用時執行 `ssh wks 'cd /home/orz99/zoo && docker compose start cli-proxy-api'`。注意：不帶服務名的 `docker compose up -d` 會把它一起啟動。同一個 OpenAI 帳號不要同時登入 CPA 與 sub2api，refresh token 用過即作廢，兩邊會互相踢掉。
+
 | 項目 | 值 |
 |------|----|
 | 網址 | https://cpa.beyondsearchai.com |
